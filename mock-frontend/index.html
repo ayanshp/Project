@@ -1,0 +1,37 @@
+<!doctype html>
+<html>
+<head><meta charset="utf-8"><title>Mock Frontend</title></head>
+<body style="font-family: Arial; max-width: 800px; margin: 24px auto;">
+  <h2>MoodTunes Fake Frontend</h2>
+  <button onclick="health()">Check Health</button>
+  <button onclick="textTest()">Analyze Sample Text</button>
+  <pre id="out" style="background:#f5f5f5;padding:12px;border-radius:8px;"></pre>
+
+  <script>
+    const API = "http://localhost:5000";
+    const out = document.getElementById("out");
+
+    async function health() {
+      try {
+        const r = await fetch(`${API}/api/health`);
+        out.textContent = JSON.stringify(await r.json(), null, 2);
+      } catch (e) {
+        out.textContent = "Health error: " + e.message;
+      }
+    }
+
+    async function textTest() {
+      try {
+        const r = await fetch(`${API}/api/emotion-from-text`, {
+          method: "POST",
+          headers: {"Content-Type":"application/json"},
+          body: JSON.stringify({ text: "I feel stressed and tired today", song_count: 5 })
+        });
+        out.textContent = JSON.stringify(await r.json(), null, 2);
+      } catch (e) {
+        out.textContent = "Text API error: " + e.message;
+      }
+    }
+  </script>
+</body>
+</html>
